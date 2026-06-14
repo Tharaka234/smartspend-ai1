@@ -15,6 +15,48 @@ class FinanceDashboard extends StatefulWidget {
 }
 
 class _FinanceDashboardState extends State<FinanceDashboard> {
+  void _setBudgetDialog() {
+    final budgetController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Set Monthly Budget'),
+        content: TextField(
+          controller: budgetController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Budget (Rs.)',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final enteredBudget =
+              double.tryParse(budgetController.text);
+
+              if (enteredBudget == null || enteredBudget <= 0) {
+                return;
+              }
+
+              setState(() {
+                _monthlyBudget = enteredBudget;
+              });
+
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
   final List<Transaction> _userTransactions = [
     Transaction(
       id: 't1',
@@ -100,12 +142,19 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: Color(0xFF00796B), // Teal color
+            color: Color(0xFF00796B),
           ),
         ),
         backgroundColor: const Color(0xFF00BFA5),
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_balance_wallet),
+            onPressed: _setBudgetDialog,
+          ),
+        ],
       ),
 
       // ✅ FIX: FULL SCROLLABLE PAGE
