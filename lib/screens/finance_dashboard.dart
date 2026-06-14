@@ -5,6 +5,7 @@ import '../widgets/new_transaction.dart';
 import '../widgets/summary_cards.dart';
 import '../widgets/ai_insight_card.dart';
 import '../widgets/spending_chart.dart';
+import '../widgets/monthly_report_card.dart';
 
 class FinanceDashboard extends StatefulWidget {
   const FinanceDashboard({super.key});
