@@ -14,12 +14,15 @@ class AIInsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String message;
 
-    if (spending > budget * 0.8) {
+    if (spending >= budget) {
       message =
-      "You have used more than 80% of your monthly budget.";
+      "You have exceeded your monthly budget.";
+    } else if (spending > budget * 0.8) {
+      message =
+      "You have used more than 80% of your budget.";
     } else {
       message =
-      "Your spending is currently within a healthy range.";
+      "Great! Your spending is under control.";
     }
 
     return Card(
