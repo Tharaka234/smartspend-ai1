@@ -17,13 +17,13 @@ class SummaryCards extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _card('Spent', '\$${spent.toStringAsFixed(0)}'),
+          child: _card('Spent', 'Rs. ${spent.toStringAsFixed(0)}'),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _card(
             'Left',
-            '\$${(budget - spent).toStringAsFixed(0)}',
+            'Rs. ${(budget - spent).toStringAsFixed(0)}',
           ),
         ),
         const SizedBox(width: 10),
