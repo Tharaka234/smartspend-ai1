@@ -131,6 +131,11 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                 transactions: _userTransactions.length,
               ),
 
+              MonthlyReportCard(
+                budget: _monthlyBudget,
+                spent: _totalSpending,
+              ),
+
               const SizedBox(height: 20),
 
               AIInsightCard(
