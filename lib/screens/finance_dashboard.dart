@@ -38,7 +38,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     ),
   ];
 
-  final double _monthlyBudget = 500.00;
+  double _monthlyBudget = 0.0;
 
   double get _totalSpending =>
       _userTransactions.fold(0.0, (sum, item) => sum + item.amount);
@@ -224,7 +224,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                         ),
                       ),
                       trailing: Text(
-                        '-\$${tx.amount.toStringAsFixed(2)}',
+                        'Rs. ${tx.amount.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
