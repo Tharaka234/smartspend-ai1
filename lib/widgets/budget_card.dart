@@ -63,7 +63,7 @@ class BudgetCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '\$${totalSpending.toStringAsFixed(2)}',
+              'Rs. ${totalSpending.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
             ),
             const SizedBox(height: 15),
@@ -71,12 +71,12 @@ class BudgetCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Budget: \$${monthlyBudget.toStringAsFixed(0)}',
+                  'Budget: Rs. ${monthlyBudget.toStringAsFixed(0)}',
                   style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
                 ),
                 Text(
                   remainingBudget >= 0
-                      ? 'Left: \$${remainingBudget.toStringAsFixed(2)}'
+                      ? 'Left: Rs. ${remainingBudget.toStringAsFixed(2)}'
                       : 'Over: \$${(remainingBudget * -1).toStringAsFixed(2)}',
                   style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                 ),
