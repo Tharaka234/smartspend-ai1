@@ -64,8 +64,15 @@ class _NewTransactionState extends State<NewTransaction> {
           const SizedBox(height: 24),
           TextField(
             controller: _titleController,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 16,
+            ),
             decoration: InputDecoration(
-              labelText: 'What did you buy?',
+                labelText: 'What did you buy?',
+                labelStyle: const TextStyle(
+                  color: Colors.grey,
+                ),
               filled: true,
               fillColor: Colors.grey[50],
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -75,9 +82,16 @@ class _NewTransactionState extends State<NewTransaction> {
           const SizedBox(height: 16),
           TextField(
             controller: _amountController,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 16,
+            ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: 'How much? (\$)',
+                labelText: 'How much? (Rs.)',
+                labelStyle: const TextStyle(
+                  color: Colors.grey,
+                ),
               filled: true,
               fillColor: Colors.grey[50],
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -86,6 +100,10 @@ class _NewTransactionState extends State<NewTransaction> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 16,
+            ),
             value: _selectedCategory,
             decoration: InputDecoration(
               labelText: 'Select Category',
