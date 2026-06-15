@@ -194,7 +194,9 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
               const SizedBox(height: 15),
 
-              const SpendingChart(),
+              SpendingChart(
+                transactions: _userTransactions,
+              ),
 
               const SizedBox(height: 20),
 
