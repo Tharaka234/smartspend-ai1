@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/transaction.dart';
+import '../services/database_helper.dart';
 import '../widgets/budget_card.dart';
 import '../widgets/new_transaction.dart';
 import '../widgets/summary_cards.dart';
@@ -15,6 +17,34 @@ class FinanceDashboard extends StatefulWidget {
 }
 
 class _FinanceDashboardState extends State<FinanceDashboard> {
+  static const _budgetPrefsKey = 'monthly_budget';
+
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final txs = await DatabaseHelper.instance.getTransactions();
+    final prefs = await SharedPreferences.getInstance();
+    final savedBudget = prefs.getDouble(_budgetPrefsKey) ?? 0.0;
+
+    setState(() {
+      _userTransactions.clear();
+      _userTransactions.addAll(txs);
+      _monthlyBudget = savedBudget;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _saveBudget(double budget) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_budgetPrefsKey, budget);
+  }
+
   void _setBudgetDialog() {
     final budgetController = TextEditingController();
 
@@ -48,6 +78,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               setState(() {
                 _monthlyBudget = enteredBudget;
               });
+              _saveBudget(enteredBudget);
 
               Navigator.of(ctx).pop();
             },
@@ -57,29 +88,8 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
       ),
     );
   }
-  final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'Weekly Groceries',
-      amount: 64.20,
-      date: DateTime.now(),
-      category: 'Food',
-    ),
-    Transaction(
-      id: 't2',
-      title: 'City Cab Ride',
-      amount: 18.50,
-      date: DateTime.now(),
-      category: 'Transport',
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Cinema Tickets',
-      amount: 25.00,
-      date: DateTime.now(),
-      category: 'Entertainment',
-    ),
-  ];
+
+  final List<Transaction> _userTransactions = [];
 
   double _monthlyBudget = 0.0;
 
@@ -107,18 +117,26 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
       String txTitle,
       double txAmount,
       String txCategory,
-      ) {
+      ) async {
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      title: txTitle,
+      amount: txAmount,
+      date: DateTime.now(),
+      category: txCategory,
+    );
+
+    await DatabaseHelper.instance.insertTransaction(newTx);
+
     setState(() {
-      _userTransactions.insert(
-        0,
-        Transaction(
-          id: DateTime.now().toString(),
-          title: txTitle,
-          amount: txAmount,
-          date: DateTime.now(),
-          category: txCategory,
-        ),
-      );
+      _userTransactions.insert(0, newTx);
+    });
+  }
+
+  Future<void> _clearAllTransactions() async {
+    await DatabaseHelper.instance.clearTransactions();
+    setState(() {
+      _userTransactions.clear();
     });
   }
 
@@ -135,6 +153,12 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -157,7 +181,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
         ],
       ),
 
-      // ✅ FIX: FULL SCROLLABLE PAGE
+      // FULL SCROLLABLE PAGE
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -213,11 +237,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _userTransactions.clear();
-                      });
-                    },
+                    onPressed: _clearAllTransactions,
                     child: const Text(
                       'Clear All',
                       style: TextStyle(color: Colors.grey),
@@ -228,7 +248,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
               const SizedBox(height: 8),
 
-              // ✅ FIX: shrinkWrap list (NO Expanded)
+              // shrinkWrap list (NO Expanded)
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
